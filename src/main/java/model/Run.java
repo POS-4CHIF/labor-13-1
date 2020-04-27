@@ -9,9 +9,10 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "run")
+@SequenceGenerator(name = "run_seq", sequenceName = "run_id_seq")
 public class Run implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "run_seq")
     @Column(name = "run_id")
     private Integer id;
 

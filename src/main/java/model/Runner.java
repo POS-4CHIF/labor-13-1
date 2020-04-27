@@ -10,9 +10,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "runner")
+@SequenceGenerator(name = "runner_seq", sequenceName = "runner_id_seq")
 public class Runner {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "runner_seq")
     @Column(name="runner_id")
     private Integer id;
 
@@ -126,7 +127,6 @@ public class Runner {
                 ", birthDay=" + birthDay +
                 ", gender=" + gender +
                 ", weight=" + weight +
-                ", runs size=" + runs.size() +
                 '}';
     }
 }
