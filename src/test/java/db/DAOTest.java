@@ -22,7 +22,7 @@ public class DAOTest {
     static void beforeAll() {
         dao = DAO.getINSTANCE();
         dao.insertTestData();
-      EntityManager em = JPAUtil.getEMF().createEntityManager();
+        EntityManager em = JPAUtil.getEMF().createEntityManager();
         System.out.println(em.createQuery("select r from Runner r").getResultList());
         System.out.println(em.createQuery("select r from Run r").getResultList());
     }
@@ -60,7 +60,7 @@ public class DAOTest {
                 () -> dao.longRun(-10000));
     }
 
-    // Testfall: liefert die Gesamtstrecke des L¨aufers mit der ID 1 im Juli 2019
+    // Testfall: liefert die Gesamtstrecke des Läufers mit der ID 2 im Juli 2019
     // Erwartetes Ergebnis: 36000
     @Test
     void testTotalDistance1() {
@@ -71,5 +71,37 @@ public class DAOTest {
                 LocalDate.of(2019, 7, 31));
         assertEquals(36000, distance);
     }
+
+    // Testfall: Ruft totalDistance mit dem Runner null auf
+    // Erwartetes Ergebnis: IllegalArgumentException
+    @Test
+    void testTotalDistance2() {
+        assertThrows(IllegalArgumentException.class,
+                () -> dao.totalDistance(null, LocalDate.of(2019, 7, 1),
+                        LocalDate.of(2019, 7, 31)));
+
+    }
+
+    // Testfall: Ruft totalDistance mit einem fromDate auf, das nach dem afterDate liegt
+    // Erwartetes Ergebnis: IllegalArgumentException
+    @Test
+    void testTotalDistance3() {
+        assertThrows(IllegalArgumentException.class,
+                () -> dao.totalDistance(new Runner(), LocalDate.of(2020, 1, 1),
+                        LocalDate.of(2019, 1, 1)));
+
+    }
+
+    // Testfall: liefert die Gesamtstrecke des Läufers mit der ID 1 im Jahr 2019
+    // Erwartetes Ergebnis: 52545
+    @Test
+    void testTotalDistance4() {
+        Runner r = dao.findRunnerById(1);
+        assertEquals("Huber", r.getLastName());
+        long distance = dao.totalDistance(r, LocalDate.of(2019, 1, 1),
+                LocalDate.of(2020, 1, 1));
+        assertEquals(10350+42195, distance);
+    }
+
 
 }

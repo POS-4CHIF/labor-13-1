@@ -109,6 +109,7 @@ public class DAO implements AutoCloseable {
     }
 
     public long totalDistance(Runner r, LocalDate fromDate, LocalDate toDate) {
+        if(r == null) throw new IllegalArgumentException("Runner r may not be null");
         if (fromDate.isAfter(toDate)) throw new IllegalArgumentException("fromDate must be before toDate");
         EntityManager em = JPAUtil.getEMF().createEntityManager();
         Query q = em.createQuery("select sum(run.distance) from Run run where run.runner = :runner and run.date >= :fromDate and run.date <= :toDate");
